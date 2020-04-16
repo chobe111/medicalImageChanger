@@ -11,7 +11,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+.idea
 # Generated files
 .idea/**/contentModel.xml
 
@@ -190,6 +190,20 @@ celerybeat-schedule
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+### venv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+pyvenv.cfg
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-selfcheck.json
 
 # Pyre type checker
 .pyre/
