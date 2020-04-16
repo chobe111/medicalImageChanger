@@ -208,5 +208,8 @@ pip-selfcheck.json
 # Pyre type checker
 .pyre/
 
+# Test jupyter Folder
+test_jupyter/
+
 # End of https://www.gitignore.io/api/python,pycharm
 
