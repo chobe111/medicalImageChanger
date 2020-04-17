@@ -1,5 +1,6 @@
 import tensorflow as tf
-
+from PIL import Image
+import os
 import warnings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -18,6 +19,13 @@ def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
 
+def maybe_mkdir(path):
+    if os.path.isdir(path):
+        return
+
+    os.mkdir(path)
+
+
 def png_to_tfrecords(file_path_list, output_records_name):
     print("Try to make {} file....".format(output_records_name))
 
@@ -30,15 +38,11 @@ def png_to_tfrecords(file_path_list, output_records_name):
         for file in file_path_list:
             img = tf.read_file(file)
             img_bytes = sess.run(img)
-
-            height = img.shape[0]
-            width = img.shape[1]
-
             filename = file.split("/")
             filename = filename[-1][:-4]
 
             example = tf.train.Example(features=tf.train.Features(feature={
-                'image/filename': _bytes_feature(filename),
+                'image/filename': _bytes_feature(filename.encode()),
                 'image/encoded_image': _bytes_feature(img_bytes)
             }))
 

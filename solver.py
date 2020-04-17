@@ -12,6 +12,7 @@ class ImageSolver(object):
         return
 
     def process(self):
+        print("current mode = {}".format(self.mode))
         if self.mode == 'dicom_to_nifti':
             self.dicom_to_nifti()
 
@@ -26,7 +27,15 @@ class ImageSolver(object):
         return
 
     def png_series_to_tfrecords(self):
-        utils.png_to_tfrecords(self.input_path, "test.tfrecords")
+        png_file_list = [os.path.join(self.input_path, file) for file in os.listdir(self.input_path) if
+                         file.endswith(".png")]
+        png_file_list.sort()
+        # FIXME : update later
+
+        base_tfrecords_name = os.path.join(self.input_path, "example.tfrecords")
+        utils.png_to_tfrecords(png_file_list, base_tfrecords_name)
+
+        print("Successfully make tfrecords in {}------------".format(base_tfrecords_name))
         return
 
     def dicom_to_nifti(self):
@@ -50,24 +59,36 @@ class ImageSolver(object):
 
     def dicom_to_png(self):
         print("current mode = {}".format(self.mode))
-        dcm_file_list = [file for file in os.listdir(self.input_path) if file.endswith(".dcm")]
+        # get dicom file list
+        dcm_file_list = [file for file in os.listdir(self.input_path) if
+                         file.endswith(".dcm")]
+
         dcm_file_list.sort()
+
+        parent_path = self.input_path + "/../"
+
+        png_dir_name = self.get_dir_name(self.input_path) + "toPng"
+
+        # make new png dir with png name
+        png_dir_path = os.path.join(parent_path, png_dir_name)
+        utils.maybe_mkdir(png_dir_path)
 
         for dcm in dcm_file_list:
             dcm_name = dcm[:-4]
 
-            if os.path.isfile(os.path.join(self.input_path, dcm_name + ".png")):
-                continue
-            mritopng.convert_file(os.path.join(self.input_path, dcm), os.path.join(self.input_path, dcm_name + ".png"),
+            png_name = dcm_name + ".png"
+
+            # convert one dicom file to one png file
+            mritopng.convert_file(os.path.join(self.input_path, dcm), os.path.join(png_dir_path, png_name),
                                   auto_contrast=True)
 
-        pass
+        return
 
     def nifti_to_dicom(self):
         print("current mode = {}".format(self.mode))
         pass
 
-    def get_nifti_output_path(self, dicom_path):
+    def get_dir_name(self, dicom_path):
         split_path = dicom_path.split("/")
 
         if split_path[-1] == "":
@@ -75,4 +96,4 @@ class ImageSolver(object):
         else:
             output_name = split_path[-1]
 
-        return os.path.join("nifti_data", output_name + ".nii.gz")
+        return output_name
