@@ -3,6 +3,7 @@ import nibabel as nib
 import os
 import SimpleITK as sitk
 import mritopng
+import utils
 
 
 class ImageSolver(object):
@@ -22,6 +23,12 @@ class ImageSolver(object):
         elif self.mode == 'nifti_to_dicom':
             self.nifti_to_dicom()
 
+        elif self.mode == 'png_series_to_tfrecords':
+            self.png_series_to_tfrecords()
+        return
+
+    def png_series_to_tfrecords(self):
+        utils.png_to_tfrecords(self.input_path, "test.tfrecords")
         return
 
     def dicom_to_nifti(self):

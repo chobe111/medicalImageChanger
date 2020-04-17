@@ -4,7 +4,10 @@ from solver import ImageSolver
 parser = argparse.ArgumentParser(description="ImageChanger")
 
 parser.add_argument("--mode", help="choose change mode \n ex) dicom_to_nifti , dicom_to_png, 'nifti_to_dicom' ")
-parser.add_argument("--input_path", help=" path/to/you/want/input ")
+parser.add_argument("--input_path")
+parser.add_argument("--dicom_series_folder_path")
+parser.add_argument("--nifti_file_path")
+parser.add_argument("--png_series_folder_path")
 
 args = parser.parse_args()
 
