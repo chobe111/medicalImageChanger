@@ -1,5 +1,3 @@
-import numpy as np
-import nibabel as nib
 import os
 import SimpleITK as sitk
 import mritopng
@@ -32,6 +30,7 @@ class ImageSolver(object):
         return
 
     def dicom_to_nifti(self):
+        print("current mode = {}".format(self.mode))
         reader = sitk.ImageSeriesReader()
 
         dicom_names = reader.GetGDCMSeriesFileNames(self.input_path)
@@ -50,6 +49,7 @@ class ImageSolver(object):
         pass
 
     def dicom_to_png(self):
+        print("current mode = {}".format(self.mode))
         dcm_file_list = [file for file in os.listdir(self.input_path) if file.endswith(".dcm")]
         dcm_file_list.sort()
 
@@ -64,17 +64,15 @@ class ImageSolver(object):
         pass
 
     def nifti_to_dicom(self):
+        print("current mode = {}".format(self.mode))
         pass
 
     def get_nifti_output_path(self, dicom_path):
-
         split_path = dicom_path.split("/")
 
         if split_path[-1] == "":
             output_name = split_path[-2]
         else:
             output_name = split_path[-1]
-
-        print("--- Try Make new {}.nii.gz file in nifti_data folder ---".format(output_name))
 
         return os.path.join("nifti_data", output_name + ".nii.gz")

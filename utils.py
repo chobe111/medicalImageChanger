@@ -1,7 +1,4 @@
 import tensorflow as tf
-from PIL import Image
-import skimage.io as io
-import numpy as np
 
 import warnings
 
