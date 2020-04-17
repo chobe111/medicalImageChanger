@@ -210,6 +210,6 @@ pip-selfcheck.json
 
 # Test jupyter Folder
 test_jupyter/
-
+test_data/
 # End of https://www.gitignore.io/api/python,pycharm
 
