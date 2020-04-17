@@ -58,7 +58,6 @@ class ImageSolver(object):
         pass
 
     def dicom_to_png(self):
-        print("current mode = {}".format(self.mode))
         # get dicom file list
         dcm_file_list = [file for file in os.listdir(self.input_path) if
                          file.endswith(".dcm")]
@@ -71,6 +70,7 @@ class ImageSolver(object):
 
         # make new png dir with png name
         png_dir_path = os.path.join(parent_path, png_dir_name)
+
         utils.maybe_mkdir(png_dir_path)
 
         for dcm in dcm_file_list:
@@ -82,6 +82,7 @@ class ImageSolver(object):
             mritopng.convert_file(os.path.join(self.input_path, dcm), os.path.join(png_dir_path, png_name),
                                   auto_contrast=True)
 
+        print("Successfully process dicom to png your new file created at {}".format(png_dir_path))
         return
 
     def nifti_to_dicom(self):
