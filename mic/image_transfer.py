@@ -2,6 +2,7 @@ import argparse
 from mic.solver import ImageTransfer
 
 
+
 def get_args():
     parser = argparse.ArgumentParser("image_transfer")
     parser.add_argument("input_path")

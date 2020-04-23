@@ -12,7 +12,6 @@ from PIL import Image
 class ImageTransfer(object):
     def __init__(self, input_path):
         self.mode_info = dict()
-
         self.__init_logger()
         self.input_path = input_path
 
@@ -29,7 +28,6 @@ class ImageTransfer(object):
 
         current_time = datetime.datetime.today()
         file_name = current_time.strftime("%Y-%m-%d") + ".log"
-
         file_path = os.path.join(self.input_path, file_name)
 
         self.logger.add_file_handler(file_path, "w", "INFO")
