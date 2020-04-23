@@ -16,7 +16,6 @@ class MedicalLogger:
             ERROR=logging.ERROR,
             CRITICAL=logging.CRITICAL
         )
-        return
 
     def add_stream_handler(self, level):
         stream_handler = logging.StreamHandler()
