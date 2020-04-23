@@ -13,6 +13,11 @@ def get_folder_name(path: str) -> str:
     return folder_name
 
 
+def get_name(path):
+    name = path.split("/")
+    return name[-1]
+
+
 def get_dir_name(dcm_path):
     split_path = dcm_path.split("/")
 

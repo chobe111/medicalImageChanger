@@ -11,7 +11,7 @@ setup(
         "tensorflow>=1.14.0",
         "SimpleITK>=1.2.4",
         "Pillow>=7.1.1",
-        "mritopng==2.2"
+        "mritopng==2.2",
     ],
     packages=find_packages(exclude=['test_jupyter/', 'venv/']),
     keywords=["medical image", "image change"],

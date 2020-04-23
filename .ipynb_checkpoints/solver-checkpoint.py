@@ -1,7 +1,7 @@
 import os
 import SimpleITK as sitk
 import mritopng
-import utils
+from mic import utils
 
 
 class MedicalImageDivider(object):

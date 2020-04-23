@@ -1,25 +1,20 @@
 import os
 import SimpleITK as sitk
 import mritopng
-import utils
-import sys, time
+from mic import utils
+import time
 import numpy as np
-
-
-class MedicalImageDivider(object):
-    def __init__(self, input_path):
-        return
-
-    def __call__(self, *args, **kwargs):
-        return
+from medicallogger import MedicalLogger
+import datetime
+from PIL import Image
 
 
 class ImageTransfer(object):
-    def __init__(self, mode, input_path):
-        self.mode = mode
+    def __init__(self, input_path):
+        self.mode_info = dict()
+
+        self.__init_logger()
         self.input_path = input_path
-        self._set_logger()
-        return
 
     def _set_itk_file_writer(self):
         self.writer = sitk.ImageFileWriter()
@@ -27,25 +22,19 @@ class ImageTransfer(object):
 
         return
 
-    def _set_logger(self):
+    def __init_logger(self):
+        self.logger = MedicalLogger(__name__)
 
-        return
+        self.logger.add_stream_handler("INFO")
 
-    def process(self):
-        print("current mode = {}".format(self.mode))
-        if self.mode == 'dcm_to_nii':
-            self.dcm_to_nii()
+        current_time = datetime.datetime.today()
+        file_name = current_time.strftime("%Y-%m-%d") + ".log"
 
-        elif self.mode == 'dcm_to_png':
-            self.dcm_to_png()
+        file_path = os.path.join(self.input_path, file_name)
 
-        elif self.mode == 'nii_to_dcm':
-            self.nii_to_dcm()
+        self.logger.add_file_handler(file_path, "w", "INFO")
 
-        elif self.mode == 'png_series_to_tf_records':
-            self.png_series_to_tf_records()
-
-        return
+        self.logger = self.logger()
 
     def png_series_to_tf_records(self):
         png_file_list = [os.path.join(self.input_path, file) for file in os.listdir(self.input_path) if
@@ -59,11 +48,9 @@ class ImageTransfer(object):
         base_tf_records_name = os.path.join(self.input_path, tf_records_name)
         utils.png_to_tf_records(png_file_list, base_tf_records_name)
 
-        print("Successfully make tf_records in {}------------".format(base_tf_records_name))
-        return
+        self.logger.info("Successfully make tf_records in {}------------".format(base_tf_records_name))
 
     def dcm_to_nii(self):
-        print("current mode = {}".format(self.mode))
         reader = sitk.ImageSeriesReader()
 
         dcm_names = reader.GetGDCMSeriesFileNames(self.input_path)
@@ -78,10 +65,9 @@ class ImageTransfer(object):
         writer.SetFileName(output_path)
         writer.Execute()
 
-        print(" --- Successfully make new nii file!! --- ")
-        pass
+        self.logger.info(" --- Successfully make new nii file in {} --- ".format(output_path))
 
-    def dcm_to_png(self):
+    def dcm_to_png(self, input_path):
         # get dcm file list
         dcm_file_list = [file for file in os.listdir(self.input_path) if
                          file.endswith(".dcm")]
@@ -101,11 +87,42 @@ class ImageTransfer(object):
             dcm_name = dcm[:-4]
             png_name = dcm_name + ".png"
             # convert one dcm file to one png file
-            mritopng.convert_file(os.path.join(self.input_path, dcm), os.path.join(png_dir_path, png_name),
-                                  auto_contrast=True)
+            dcm_path = os.path.join(input_path, dcm)
+            png_path = os.path.join(png_dir_path, png_name)
 
-        print("Successfully process dcm to png your new file created at {}".format(png_dir_path))
-        return
+            mritopng.convert_file(dcm_path, png_path, auto_contrast=True)
+
+        self.logger.info("--- Successfully process dcm to png your new file created at {} ---".format(png_dir_path))
+
+    def combine_png(self, output_path, img1_dir_path, img2_dir_path):
+        img1_png_list = [os.path.join(img1_dir_path, file) for file in os.listdir(img1_dir_path) if
+                         file.endswith(".png")]
+        img2_png_list = [os.path.join(img2_dir_path, file) for file in os.listdir(img2_dir_path) if
+                         file.endswith(".png")]
+
+        img1_png_list.sort()
+        img2_png_list.sort()
+
+        assert len(img1_png_list) == len(img2_png_list)
+        cnt = 0
+        for ct, mri in zip(img1_png_list, img2_png_list):
+            images = [Image.open(x) for x in [ct, mri]]
+            widths, heights = zip(*(i.size for i in images))
+
+            total_width = sum(widths)
+            max_height = max(heights)
+
+            new_im = Image.new('L', (total_width, max_height))
+
+            x_offset = 0
+            for im in images:
+                new_im.paste(im, (x_offset, 0))
+                x_offset += im.size[0]
+
+            new_name = utils.get_name(ct)
+
+            new_im.save(os.path.join(output_path, '{}.png').format(new_name))
+            cnt += 1
 
     def nii_to_dcm(self):
         nii = sitk.ReadImage(self.input_path)
@@ -126,9 +143,7 @@ class ImageTransfer(object):
         for i in range(new_img):
             self.writeSlices(series_tag_values, new_img, i, output_path, nii_file_name)
 
-        print(" --- Successfully make new nii file!! --- ")
-
-        pass
+        self.logger.info(" --- Successfully make new dicom series!! in {} --- ".format(output_path))
 
     def writeSlices(self, series_tag_values, new_img, i, output_path, base_name):
         image_slice = new_img[:, :, i]
