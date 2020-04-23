@@ -1,7 +1,7 @@
 import os
 import SimpleITK as sitk
 import mritopng
-from mic import utils
+from micg import utils
 import time
 import numpy as np
 from medicallogger import MedicalLogger

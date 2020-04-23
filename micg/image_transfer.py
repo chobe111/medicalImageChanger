@@ -1,5 +1,5 @@
 import argparse
-from mic.solver import ImageTransfer
+from micg.solver import ImageTransfer
 
 
 

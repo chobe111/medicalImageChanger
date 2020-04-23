@@ -15,11 +15,11 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'micg_d2n = mic.image_transfer:dicom_to_nifti',
-            'micg_n2d = mic.image_transfer:nii_to_dicom',
-            'micg_combine_png = mic.image_transfer:combine_png',
-            'micg_d2p = mic.image_transfer:dicom_to_png',
-            'micg_png_to_tfrecords = mic.image_transfer:png_series_to_tf_records'
+            'micg_d2n = micg.image_transfer:dicom_to_nifti',
+            'micg_n2d = micg.image_transfer:nii_to_dicom',
+            'micg_combine_png = micg.image_transfer:combine_png',
+            'micg_d2p = micg.image_transfer:dicom_to_png',
+            'micg_png_to_tfrecords = micg.image_transfer:png_series_to_tf_records'
         ],
     },
 
