@@ -4,7 +4,7 @@ import mritopng
 from micg import utils
 import time
 import numpy as np
-from medicallogger import MedicalLogger
+from micg.medicallogger import MedicalLogger
 import datetime
 from PIL import Image
 
