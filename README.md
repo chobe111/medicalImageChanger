@@ -10,7 +10,7 @@
 - Use Pip install
 		i. install migc using pip (current version is 1.1.0)
 	```
-	pip install migc
+	pip install micg
 	```
 	after install migc you may use some console script
 
