@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='micg',
-    version="1.0.0",
+    version="1.1.0",
     description="Medical Image Changer",
     author="Myung Ki Cho",
     author_email="chobe0719@gmail.com",
