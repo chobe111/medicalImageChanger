@@ -8,6 +8,7 @@ class MedicalLogger:
         self.logger.setLevel(logging.INFO)
         self.formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(messages)s")
 
+
         self.levels = dict(
             DEBUG=logging.DEBUG,
             INFO=logging.INFO,
