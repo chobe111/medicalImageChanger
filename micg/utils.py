@@ -65,18 +65,15 @@ def get_series_tag_values(direction):
 
 def _float_feature(value):
     """
-
     :param value: float double
     :return: float list
     """
-
     return tf.train.Feature(float_list=tf.train.FloatList(value=[value]))
 
 
 def maybe_mkdir(path):
     if os.path.isdir(path):
         return
-
     os.mkdir(path)
 
 

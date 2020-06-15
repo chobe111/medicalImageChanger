@@ -2,8 +2,7 @@ import argparse
 from micg.solver import ImageTransfer
 
 
-
-def get_args():
+def get_arguments():
     parser = argparse.ArgumentParser("image_transfer")
     parser.add_argument("input_path")
     args = parser.parse_args()
@@ -12,17 +11,17 @@ def get_args():
 
 
 def dicom_to_png():
-    args, transfer = get_args()
+    args, transfer = get_arguments()
     transfer.dcm_to_png(args.input_path)
 
 
 def png_series_to_tf_records():
-    args, transfer = get_args()
+    args, transfer = get_arguments()
     transfer.png_series_to_tf_records()
 
 
 def dicom_to_nifti():
-    args, transfer = get_args()
+    args, transfer = get_arguments()
     transfer.dcm_to_nii()
 
 
@@ -42,5 +41,5 @@ def combine_png():
 
 
 def nii_to_dicom():
-    args, transfer = get_args()
+    args, transfer = get_arguments()
     transfer.nii_to_dcm()
