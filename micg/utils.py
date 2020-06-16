@@ -18,6 +18,19 @@ def get_name(path):
     return name[-1]
 
 
+def get_last_dir_path(path):
+    arr = path.split('/')
+    dir_path = ""
+
+    for i, f in enumerate(arr):
+        dir_path += arr[i]
+        dir_path += "/"
+        if i == len(arr) - 2:
+            break
+
+    return dir_path
+
+
 def get_dir_name(dcm_path):
     split_path = dcm_path.split("/")
 

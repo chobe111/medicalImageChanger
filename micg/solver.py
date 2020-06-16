@@ -12,14 +12,13 @@ from PIL import Image
 class ImageTransfer(object):
     def __init__(self, input_path):
         self.mode_info = dict()
-        self.__init_logger()
         self.input_path = input_path
+        self._set_itk_file_writer()
+        self.__init_logger()
 
     def _set_itk_file_writer(self):
         self.writer = sitk.ImageFileWriter()
         self.writer.KeepOriginalImageUIDOn()
-
-        return
 
     def __init_logger(self):
         self.logger = MedicalLogger(__name__)
@@ -27,10 +26,17 @@ class ImageTransfer(object):
         self.logger.add_stream_handler("INFO")
 
         current_time = datetime.datetime.today()
-        file_name = current_time.strftime("%Y-%m-%d") + ".log"
-        file_path = os.path.join(self.input_path, file_name)
 
-        self.logger.add_file_handler(file_path, "w", "INFO")
+        file_name = current_time.strftime("%Y-%m-%d") + ".log"
+
+        if os.path.isdir(self.input_path):
+            file_path = os.path.join(self.input_path, file_name)
+
+        else:
+            dir_path = utils.get_last_dir_path(self.input_path)
+            file_path = os.path.join(dir_path, file_name)
+
+        self.logger.add_file_handler(utils.get_folder_name(file_path), "w", "INFO")
 
         self.logger = self.logger()
 
@@ -134,11 +140,11 @@ class ImageTransfer(object):
         direction = new_img.GetDirection()
         series_tag_values = utils.get_series_tag_values(direction)
 
-        nii_file_name = utils.get_folder_name(self.input_path)
+        nii_file_name = utils.get_name(self.input_path)
 
-        output_path = self.input_path + "/../"
+        output_path = utils.get_last_dir_path(self.input_path)
 
-        for i in range(new_img):
+        for i in range(img_depth):
             self.writeSlices(series_tag_values, new_img, i, output_path, nii_file_name)
 
         self.logger.info(" --- Successfully make new dicom series!! in {} --- ".format(output_path))
