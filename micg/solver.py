@@ -99,6 +99,7 @@ class ImageTransfer(object):
         self.logger.info("--- Successfully process dcm to png your new file created at {} ---".format(png_dir_path))
 
     def combine_png(self, output_path, img1_dir_path, img2_dir_path):
+
         img1_png_list = [os.path.join(img1_dir_path, file) for file in os.listdir(img1_dir_path) if
                          file.endswith(".png")]
         img2_png_list = [os.path.join(img2_dir_path, file) for file in os.listdir(img2_dir_path) if
@@ -166,7 +167,7 @@ class ImageTransfer(object):
         image_slice.SetMetaData("0020,0013", str(i))  # Instance Number
 
         #     # Write to the output directory and add the extension dcm, to force writing in DICOM format.
-        self.writer.SetFileName(os.path.join(output_path, base_name + str(i) + '.dcm'))
+        self.writer.SetFileName(os.path.join(output_path, base_name[:-7] + str(i) + '.dcm'))
         self.writer.Execute(image_slice)
 
     def _get_nii_output_path(self):
